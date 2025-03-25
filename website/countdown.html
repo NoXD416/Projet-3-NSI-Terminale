@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Compte à rebours</title>
+    <script src="p5.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .back-btn:hover {
+            background-color: #d32f2f;
+        }
+        #countdown-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <button class="back-btn" onclick="window.location.href='homepage.html'">Retour au menu</button>
+    <div id="countdown-container">
+        <div id="countdown"></div>
+    </div>
+
+    <script>
+        let countdownTime = prompt("Entre un nombre en secondes :", "60") || 60;
+        countdownTime = parseInt(countdownTime);
+        
+        new p5(function(p) {
+            let remainingTime = countdownTime;
+            
+            p.setup = function() {
+                let canvas = p.createCanvas(800, 400);
+                canvas.parent('countdown');
+                p.textSize(100);
+                p.frameRate(1);
+            };
+
+            p.draw = function() {
+                p.background("black");
+                p.fill("lightblue");
+                
+                // Calculate hours, minutes, seconds
+                let hours = Math.floor(remainingTime / 3600);
+                let minutes = Math.floor((remainingTime % 3600) / 60);
+                let seconds = remainingTime % 60;
+                
+                // Format with leading zeros
+                let hoursStr = hours < 10 ? "0" + hours : hours.toString();
+                let minutesStr = minutes < 10 ? "0" + minutes : minutes.toString();
+                let secondsStr = seconds < 10 ? "0" + seconds : seconds.toString();
+                
+                p.text(hoursStr, 50, 225);
+                p.text(minutesStr, 335, 225);
+                p.text(secondsStr, 635, 225);
+                
+                // Draw separator dots
+                p.fill("red");
+                p.circle(245, 225, 40);
+                p.circle(245, 165, 40);
+                p.circle(550, 225, 40);
+                p.circle(550, 165, 40);
+                
+                if (remainingTime > 0) {
+                    remainingTime--;
+                } else {
+                    p.background("black");
+                    p.fill("orange");
+                    p.text("C'est Fini !", 50, 225);
+                    p.noLoop();
+                }
+            };
+        });
+    </script>
+</body>
+</html>

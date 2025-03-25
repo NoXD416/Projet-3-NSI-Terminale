@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Horloge Binaire</title>
+    <script src="p5.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .back-btn:hover {
+            background-color: #d32f2f;
+        }
+        #binary-clock-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <button class="back-btn" onclick="window.location.href='homepage.html'">Retour au menu</button>
+    <div id="binary-clock-container">
+        <div id="binary-clock"></div>
+    </div>
+
+    <script>
+        new p5(function(p) {
+            const squareSize = 60;
+            const squareSpacing = 10;
+            const columnSpacing = 80;
+            const maxBits = 6;
+            
+            function toBinaryArray(number, bits) {
+                let binary = [];
+                for (let i = 0; i < bits; i++) {
+                    binary.unshift(number % 2);
+                    number = Math.floor(number / 2);
+                }
+                return binary;
+            }
+
+            function drawColumn(binaryArray, x, y) {
+                for (let i = 0; i < maxBits; i++) {
+                    const bitValue = i < binaryArray.length ? binaryArray[i] : 0;
+                    const yPos = y + (i * (squareSize + squareSpacing));
+                    
+                    if (bitValue === 1) {
+                        p.fill(31, 81, 255);
+                    } else {
+                        p.fill(172, 173, 172);
+                    }
+                    
+                    p.square(x, yPos, squareSize);
+                }
+            }
+
+            p.setup = function() {
+                let canvas = p.createCanvas(600, 500);
+                canvas.parent('binary-clock');
+                p.textSize(16);
+                p.textAlign(p.CENTER);
+            };
+
+            p.draw = function() {
+                p.background(26, 17, 16);
+                
+                const h = p.hour();
+                const m = p.minute();
+                const s = p.second();
+                
+                const startX = (p.width - (3 * (squareSize + columnSpacing))) / 2;
+                const startY = 50;
+                
+                p.fill(255);
+                p.text("HEURES", startX, startY - 20);
+                p.text("MINUTES", startX + squareSize + columnSpacing, startY - 20);
+                p.text("SECONDES", startX + 2*(squareSize + columnSpacing), startY - 20);
+                
+                drawColumn(toBinaryArray(h, 5), startX, startY);
+                drawColumn(toBinaryArray(m, 6), startX + squareSize + columnSpacing, startY);
+                drawColumn(toBinaryArray(s, 6), startX + 2*(squareSize + columnSpacing), startY);
+                
+                p.fill(200);
+                p.textSize(12);
+                for (let i = 0; i < maxBits; i++) {
+                    const value = Math.pow(2, maxBits - 1 - i);
+                    p.text(value, startX - 30, startY + (i * (squareSize + squareSpacing)) + squareSize/2 + 5);
+                }
+            };
+        });
+    </script>
+</body>
+</html>

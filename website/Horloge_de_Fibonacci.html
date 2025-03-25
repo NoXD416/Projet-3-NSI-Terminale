@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Horloge de Fibonacci</title>
+    <script src="p5.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .back-btn:hover {
+            background-color: #d32f2f;
+        }
+        #fibonacci-clock-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <button class="back-btn" onclick="window.location.href='homepage.html'">Retour au menu</button>
+    <div id="fibonacci-clock-container">
+        <div id="fibonacci-clock"></div>
+    </div>
+
+    <script>
+        new p5(function(p) {
+            function prelever_temps() {
+                let heurs = p.hour();
+                if (heurs <= 12) {
+                    return [heurs, Math.floor(p.minute() / 5)];
+                }
+                return [heurs % 12, Math.floor(p.minute() / 5)];
+            }
+
+            function combinaison_fibonnaci(temps) {
+                let fibonnaci = [5, 3, 2, 1, 1];
+                let dico_fibo = {"5": 0, "3": 0, "2": 0, "1": 0, "1'": 0};
+                let indice = 0;
+                
+                while (temps > 0) {
+                    if (fibonnaci[indice] <= temps) {
+                        dico_fibo[fibonnaci[indice].toString()] += 1;
+                        temps -= fibonnaci[indice];
+                    }
+                    indice += 1;
+                }
+                
+                if (dico_fibo["1"] === 2) {
+                    dico_fibo["1'"] = 1;
+                    dico_fibo["1"] = 1;
+                }
+                
+                return dico_fibo;
+            }
+
+            p.setup = function() {
+                let canvas = p.createCanvas(800, 500);
+                canvas.parent('fibonacci-clock');
+                p.frameRate(1);
+            };
+
+            p.draw = function() {
+                p.background(255);
+                let [heurs, minutes] = prelever_temps();
+                let carreaux = {
+                    "5": [300, 0, 500], 
+                    "3": [0, 200, 300], 
+                    "2": [0, 0, 200], 
+                    "1": [200, 0, 100], 
+                    "1'": [200, 100, 100]
+                };
+                let dico_heurs = combinaison_fibonnaci(heurs);
+                let dico_minutes = combinaison_fibonnaci(minutes);
+                
+                for (let cle in carreaux) {
+                    if (dico_heurs[cle] === 0 && dico_minutes[cle] === 0) {
+                        p.fill(211);
+                    } else if (dico_heurs[cle] === 1 && dico_minutes[cle] === 1) {
+                        p.fill(77, 77, 255);
+                    } else if (dico_heurs[cle] === 1 && dico_minutes[cle] === 0) {
+                        p.fill(255, 49, 49);
+                    } else if (dico_heurs[cle] === 0 && dico_minutes[cle] === 1) {
+                        p.fill(57, 255, 20);
+                    }
+                    
+                    p.square(carreaux[cle][0], carreaux[cle][1], carreaux[cle][2]);
+                }
+            };
+        });
+    </script>
+</body>
+</html>

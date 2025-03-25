@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>7-Segment Display</title>
+    <script src="p5.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .back-btn:hover {
+            background-color: #d32f2f;
+        }
+        #segment-display-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .num-btns {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+            width: 300px;
+        }
+        .num-btn {
+            width: 50px;
+            height: 50px;
+            margin: 5px;
+            font-size: 20px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .num-btn:hover {
+            background-color: #0b7dda;
+        }
+    </style>
+</head>
+<body>
+    <button class="back-btn" onclick="window.location.href='homepage.html'">Retour au menu</button>
+    <div id="segment-display-container">
+        <div id="segment-display"></div>
+        <div class="num-btns">
+            <button class="num-btn" onclick="setSegmentDisplay('0')">0</button>
+            <button class="num-btn" onclick="setSegmentDisplay('1')">1</button>
+            <button class="num-btn" onclick="setSegmentDisplay('2')">2</button>
+            <button class="num-btn" onclick="setSegmentDisplay('3')">3</button>
+            <button class="num-btn" onclick="setSegmentDisplay('4')">4</button>
+            <button class="num-btn" onclick="setSegmentDisplay('5')">5</button>
+            <button class="num-btn" onclick="setSegmentDisplay('6')">6</button>
+            <button class="num-btn" onclick="setSegmentDisplay('7')">7</button>
+            <button class="num-btn" onclick="setSegmentDisplay('8')">8</button>
+            <button class="num-btn" onclick="setSegmentDisplay('9')">9</button>
+        </div>
+    </div>
+
+    <script>
+        let currentKey = "";
+
+        function setSegmentDisplay(key) {
+            currentKey = key;
+        }
+
+        new p5(function(p) {
+            // Configuration corrigée des segments
+            let segments = [
+                [150, 50, 100, 20, 0],    // Segment 0 (haut)
+                [130, 70, 20, 100, 0],     // Segment 1 (gauche haut)
+                [250, 70, 20, 100, 0],     // Segment 2 (droite haut)
+                [150, 170, 100, 20, 0],    // Segment 3 (milieu)
+                [130, 190, 20, 100, 0],    // Segment 4 (gauche bas)
+                [250, 190, 20, 100, 0],    // Segment 5 (droite bas)
+                [150, 290, 100, 20, 0]     // Segment 6 (bas)
+            ];
+
+            p.setup = function() {
+                let canvas = p.createCanvas(400, 400);
+                canvas.parent('segment-display');
+            };
+
+            p.draw = function() {
+                p.background("black");
+                
+                // Réinitialisation de tous les segments
+                segments.forEach(seg => seg[4] = 0);
+                
+                // Configuration des segments pour chaque chiffre
+                switch(currentKey) {
+                    case "0":
+                        segments[0][4] = segments[1][4] = segments[2][4] = 
+                        segments[4][4] = segments[5][4] = segments[6][4] = 1;
+                        break;
+                    case "1":
+                        segments[2][4] = segments[5][4] = 1;
+                        break;
+                    case "2":
+                        segments[0][4] = segments[2][4] = segments[3][4] = 
+                        segments[4][4] = segments[6][4] = 1;
+                        break;
+                    case "3":
+                        segments[0][4] = segments[2][4] = segments[3][4] = 
+                        segments[5][4] = segments[6][4] = 1;
+                        break;
+                    case "4":
+                        segments[1][4] = segments[2][4] = segments[3][4] = 
+                        segments[5][4] = 1;
+                        break;
+                    case "5":
+                        segments[0][4] = segments[1][4] = segments[3][4] = 
+                        segments[5][4] = segments[6][4] = 1;
+                        break;
+                    case "6":
+                        segments[0][4] = segments[1][4] = segments[3][4] = 
+                        segments[4][4] = segments[5][4] = segments[6][4] = 1;
+                        break;
+                    case "7":
+                        segments[0][4] = segments[2][4] = segments[5][4] = 1;
+                        break;
+                    case "8":
+                        segments.forEach(seg => seg[4] = 1);
+                        break;
+                    case "9":
+                        segments[0][4] = segments[1][4] = segments[2][4] = 
+                        segments[3][4] = segments[5][4] = segments[6][4] = 1;
+                        break;
+                }
+
+                // Dessin des segments
+                segments.forEach(seg => {
+                    p.fill(seg[4] === 1 ? "green" : "grey");
+                    p.rect(seg[0], seg[1], seg[2], seg[3]);
+                });
+            };
+        });
+    </script>
+</body>
+</html>

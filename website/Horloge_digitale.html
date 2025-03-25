@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Horloge digitale</title>
+    <script src="p5.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .back-btn:hover {
+            background-color: #d32f2f;
+        }
+        #digital-clock-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <button class="back-btn" onclick="window.location.href='homepage.html'">Retour au menu</button>
+    <div id="digital-clock-container">
+        <div id="digital-clock"></div>
+    </div>
+
+    <script>
+        new p5(function(p) {
+            p.setup = function() {
+                let canvas = p.createCanvas(800, 400);
+                canvas.parent('digital-clock');
+                p.textSize(100);
+            };
+
+            p.draw = function() {
+                p.background("black");
+                p.fill("lightblue");
+                
+                // Get current time
+                let h = p.hour();
+                let m = p.minute();
+                let s = p.second();
+                
+                // Format with leading zeros
+                let hStr = h < 10 ? "0" + h : h.toString();
+                let mStr = m < 10 ? "0" + m : m.toString();
+                let sStr = s < 10 ? "0" + s : s.toString();
+                
+                p.text(hStr, 50, 225);
+                p.text(mStr, 335, 225);
+                p.text(sStr, 635, 225);
+                
+                // Draw separator dots
+                p.fill("red");
+                p.circle(245, 225, 40);
+                p.circle(245, 165, 40);
+                p.circle(550, 225, 40);
+                p.circle(550, 165, 40);
+            };
+        });
+    </script>
+</body>
+</html>
